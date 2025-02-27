@@ -1,18 +1,33 @@
-cmake_minimum_required(VERSION 3.30)
-
-# Set the project name via a variable
+cmake_minimum_required(VERSION 3.10)
 set(PROJECT_NAME_VAR "cpptemplate" CACHE STRING "Project name")
 project(${PROJECT_NAME_VAR})
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Google Test setup
-include(FetchContent)
-FetchContent_Declare(
-    googletest
-    GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG v1.16.0
+# Check if we can reach Google's DNS (as a connection test)
+execute_process(
+    COMMAND ping -c 1 8.8.8.8
+    RESULT_VARIABLE PING_RESULT
+    OUTPUT_QUIET
 )
+
+if(PING_RESULT EQUAL 0)
+    # Google Test setup
+    include(FetchContent)
+    FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG v1.16.0
+    )
+    set(GTEST_AVAILABLE TRUE)
+
+    ## For windows
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+    FetchContent_MakeAvailable(googletest)
+else()
+    message(WARNING "No internet connection available. Unit tests will be disabled.")
+    set(GTEST_AVAILABLE FALSE)
+endif()
 
 # Function to get all subdirectories
 function(get_all_subdirs result dir)
@@ -25,10 +40,6 @@ function(get_all_subdirs result dir)
     endforeach()
     set(${result} ${subdirs} PARENT_SCOPE)
 endfunction()
-
-## For windows
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
 
 # Debug flags
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -76,11 +87,13 @@ add_custom_target(dbg_build
 )
 
 # Unit tests setup
-enable_testing()
-set(TEST_SOURCES
+if(GTEST_AVAILABLE)
+    enable_testing()
+    set(TEST_SOURCES
         unit_tests/sample_function_test.cpp
-)
-add_executable(unit_tests ${TEST_SOURCES})
-target_link_libraries(unit_tests PRIVATE GTest::gtest_main ${PROJECT_NAME_VAR}_lib)
-include(GoogleTest)
-gtest_discover_tests(unit_tests)
+    )
+    add_executable(unit_tests ${TEST_SOURCES})
+    target_link_libraries(unit_tests PRIVATE GTest::gtest_main ${PROJECT_NAME_VAR}_lib)
+    include(GoogleTest)
+    gtest_discover_tests(unit_tests)
+endif()
