@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-set(PROJECT_NAME_VAR "cpptemplate" CACHE STRING "Project name")
+set(PROJECT_NAME_VAR "myftp" CACHE STRING "myFtp")
 project(${PROJECT_NAME_VAR})
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
