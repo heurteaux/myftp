@@ -5,10 +5,17 @@
 ** main.cpp
 */
 
+#include <exception>
 #include <iostream>
+#include "myftp.hpp"
 
-int main()
+int main(const int argc, const char **argv)
 {
-    std::cout << "Hello, world !" << std::endl;
+    try {
+        ftp::myftp::run(argc, argv);
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return 84;
+    }
     return 0;
 }
