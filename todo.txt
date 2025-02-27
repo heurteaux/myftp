@@ -1,0 +1,5 @@
+- Add 'assignment.pdf' file
+- Update project name in 'CMakeLists.txt'
+- Set repository secret 'GIT_SSH_PRIVATE_KEY'
+- Set repository variable 'MIRROR_REPOSITORY'
+- Fill README.md

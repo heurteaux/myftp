@@ -1,0 +1,26 @@
+name: mirror repo
+on:
+  pull_request:
+    branches-ignore:
+      - 'ga-ignore-*'
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  mirror_repo:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.repository != "${{ vars.MIRROR_REPOSITORY }}"
+    steps:
+      - name: Checkout to repo
+        uses: actions/checkout@v4.1.1
+        with:
+          fetch-depth: 0
+
+      - name: Clone repo content to remote
+        uses: pixta-dev/repository-mirroring-action@v1.1.1
+        with:
+          target_repo_url:
+            'git@github.com:${{ vars.MIRROR_REPOSITORY }}.git'
+          ssh_private_key:
+            ${{secrets.GIT_SSH_PRIVATE_KEY}}
