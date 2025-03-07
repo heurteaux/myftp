@@ -18,10 +18,10 @@
 
 namespace ftp
 {
-    class myftp {
+    class MyFtp {
         public:
-            explicit myftp() = default;
-            ~myftp() = default;
+            explicit MyFtp() = default;
+            ~MyFtp() = default;
 
             static void run(int argc, const char **argv);
 

@@ -7,12 +7,12 @@
 
 #include <exception>
 #include <iostream>
-#include "myftp.hpp"
+#include "MyFtp.hpp"
 
 int main(const int argc, const char **argv)
 {
     try {
-        ftp::myftp::run(argc, argv);
+        ftp::MyFtp::run(argc, argv);
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         return 84;

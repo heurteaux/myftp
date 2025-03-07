@@ -65,8 +65,12 @@ get_all_subdirs(SUBDIRS "${CMAKE_CURRENT_SOURCE_DIR}/src")
 # Project library
 set(LIB_SOURCES
         src/main.cpp
-        src/myftp.cpp
-        src/myftp.hpp
+        src/MyFtp.cpp
+        src/MyFtp.hpp
+        src/NetworkServer.cpp
+        src/NetworkServer.hpp
+        src/Logger.cpp
+        src/Logger.hpp
 )
 
 list(REMOVE_ITEM LIB_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")

@@ -5,11 +5,13 @@
 ** myftp.cpp
 */
 
-#include "myftp.hpp"
+#include "MyFtp.hpp"
+
+#include "NetworkServer.hpp"
 
 namespace ftp
 {
-    void myftp::run(const int argc, const char **argv)
+    void MyFtp::run(const int argc, const char **argv)
     {
         if (argc == 2 && (std::string(argv[1]) == HELP_FLAG_SHORT || std::string(argv[1]) == HELP_FLAG_LONG)) {
             std::cout << USAGE << std::endl;
@@ -19,6 +21,8 @@ namespace ftp
         if (argc != 3) {
             throw std::invalid_argument(USAGE);
         }
-        std::cout << "Valid arguments" << std::endl;
+
+        network::NetworkServer netServer(8080);
+        netServer.handleConnections();
     }
 }
