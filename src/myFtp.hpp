@@ -10,6 +10,8 @@
 
 #include <exception>
 #include <iostream>
+#include "networkServer.hpp"
+#include "logger.hpp"
 
 #define HELP_FLAG_SHORT "-h"
 #define HELP_FLAG_LONG "--help"
@@ -18,12 +20,13 @@
 
 namespace ftp
 {
-    class MyFtp {
+    class myFtp {
         public:
-            explicit MyFtp() = default;
-            ~MyFtp() = default;
+            explicit myFtp(const int argc, const char **argv);
 
-            static void run(int argc, const char **argv);
+            void run();
+
+            ~myFtp() = default;
 
             class invalidArgument final : public std::exception {
                 public:
@@ -32,6 +35,13 @@ namespace ftp
                 private:
                     std::string _message;
             };
+        private:
+            int getPort(int argc, const char **argv);
+
+            int _port;
+            std::string _path;
+            Logger _logger;
+            NetworkServer _server;
     };
 }
 

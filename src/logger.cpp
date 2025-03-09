@@ -5,7 +5,7 @@
 ** logger.cpp
 */
 
-#include "Logger.hpp"
+#include "logger.hpp"
 #include <iostream>
 
 Logger::Logger(LogLevel level) : _usrLevel(level)

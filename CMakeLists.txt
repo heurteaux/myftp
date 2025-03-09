@@ -45,16 +45,10 @@ endfunction()
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     include(CheckCXXCompilerFlag)
     foreach(flag IN ITEMS
-            -g3 -O0
-            -fsanitize=address -fsanitize=undefined -fsanitize=leak
-            -fno-omit-frame-pointer -fstack-protector
-            -Werror -Wextra -Wall -Wpedantic)
+            -g3  -Werror -Wextra -Wall -Wpedantic)
         check_cxx_compiler_flag(${flag} COMPILER_SUPPORTS_${flag})
         if(COMPILER_SUPPORTS_${flag})
             add_compile_options($<$<CONFIG:Debug>:${flag}>)
-            if(flag MATCHES "fsanitize")
-                add_link_options($<$<CONFIG:Debug>:${flag}>)
-            endif()
         endif()
     endforeach()
 endif()
@@ -65,12 +59,12 @@ get_all_subdirs(SUBDIRS "${CMAKE_CURRENT_SOURCE_DIR}/src")
 # Project library
 set(LIB_SOURCES
         src/main.cpp
-        src/MyFtp.cpp
-        src/MyFtp.hpp
-        src/NetworkServer.cpp
-        src/NetworkServer.hpp
-        src/Logger.cpp
-        src/Logger.hpp
+        src/myFtp.cpp
+        src/myFtp.hpp
+        src/logger.cpp
+        src/logger.hpp
+        src/networkServer.cpp
+        src/networkServer.hpp
 )
 
 list(REMOVE_ITEM LIB_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
