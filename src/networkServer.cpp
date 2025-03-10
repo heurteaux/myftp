@@ -61,7 +61,7 @@ void NetworkServer::createServerSocketPollEntry()
 NetworkServer::NetworkServer(const int port, Logger &logger) : _logger(logger), _serverPort(port),
                                                                _serverSocket(createSocket()),
                                                                _serverAddress(createServerAddress()),
-                                                               _fds({}), _nbSockets(0)
+                                                               _fds({}), _clients(std::unordered_map<int, Client>()), _nbSockets(0)
 {
     bindSocket();
     startListening();
@@ -139,6 +139,7 @@ void NetworkServer::run()
                     _fds[_nbSockets].fd = clientSocket;
                     _fds[_nbSockets].events = POLLIN;
                     _nbSockets++;
+                    _clients.emplace(clientSocket, Client(_logger, clientSocket));
                     _logger.log(Logger::LogLevel::INFO,
                                 std::format("client from {} connected on remote port {}",
                                             inet_ntoa(clientAddress.sin_addr), ntohs(clientAddress.sin_port)));
@@ -152,7 +153,7 @@ void NetworkServer::run()
         for (int i = 1; i < _nbSockets; i++) {
             // i = 1 to skip server's socket
             if (_fds[i].revents & POLLIN) {
-                char buffer[1024];
+                char buffer[4096];
                 int bytesRead = read(_fds[i].fd, buffer, sizeof(buffer));
 
                 if (bytesRead <= 0) {
@@ -160,15 +161,14 @@ void NetworkServer::run()
                                 std::format("client from {} disconnected", getClientIp(_fds[i].fd)));
                     // Client disconnected or error
                     close(_fds[i].fd);
+                    _clients.erase(_fds[i].fd);
                     // Remove from poll array by shifting every item after removed one to the left
                     memmove(&_fds[i], &_fds[i + 1],
-                            (_nbSockets - i - 1) * sizeof(struct pollfd));
+                            (_nbSockets - i - 1) * sizeof(pollfd));
                     _nbSockets--;
                     i--;
                 } else {
-                    // Handle received data
-                    _logger.log(Logger::LogLevel::DEBUG, std::format("remote client says: {}", buffer));
-                    write(_fds[i].fd, buffer, bytesRead);
+                    _clients.at(_fds[i].fd).handleRequest(buffer);
                     memset(buffer, 0, bytesRead);
                 }
             }

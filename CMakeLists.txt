@@ -65,6 +65,8 @@ set(LIB_SOURCES
         src/logger.hpp
         src/networkServer.cpp
         src/networkServer.hpp
+        src/client.cpp
+        src/client.hpp
 )
 
 list(REMOVE_ITEM LIB_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")

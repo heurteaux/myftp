@@ -44,7 +44,7 @@ Example :
 <- 331 <SP> User name okay, need password. <CRLF>
 -> PASS <SP> Password <CRLF>
 <- 230 <SP> User logged in, proceed. <CRLF>
-
+Locw
 -> : Request command from client to server
 <- : Reply from server to client
 

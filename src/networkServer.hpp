@@ -15,6 +15,8 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <errno.h>
+#include <unordered_map>
+#include "client.hpp"
 
 #include "logger.hpp"
 
@@ -24,8 +26,8 @@ class NetworkServer {
     public:
         class NetworkServerException final : public std::exception {
             public:
-            explicit NetworkServerException(const std::string &message) : _message(message) {}
-            const char *what() const noexcept override { return _message.c_str(); }
+                explicit NetworkServerException(const std::string &message) : _message(message) {}
+                const char *what() const noexcept override { return _message.c_str(); }
             private:
             std::string _message;
         };
@@ -48,6 +50,7 @@ class NetworkServer {
         int _serverSocket;
         sockaddr_in _serverAddress;
         pollfd _fds[MAX_CLIENTS + 1];
+        std::unordered_map<int, Client> _clients;
         int _nbSockets;
 };
 

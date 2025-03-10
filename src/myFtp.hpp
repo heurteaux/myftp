@@ -22,7 +22,7 @@ namespace ftp
 {
     class myFtp {
         public:
-            explicit myFtp(const int argc, const char **argv);
+            explicit myFtp(int argc, const char **argv);
 
             void run();
 

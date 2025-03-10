@@ -15,10 +15,11 @@ void Logger::log(const LogLevel level, const std::string &msg) const
 {
     if (level < getLevel())
         return;
-    std::cout << std::chrono::system_clock::now();
     if (level < LogLevel::WARN) {
+        std::cout << std::chrono::system_clock::now();
         std::cout << " [" << logLevelAsStr(level) << "]: " << msg << std::endl;
     } else {
+        std::cerr << std::chrono::system_clock::now();
         std::cerr << " [" << logLevelAsStr(level) << "]: " << msg << std::endl;
     }
 }
