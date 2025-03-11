@@ -32,7 +32,7 @@ class NetworkServer {
             std::string _message;
         };
 
-        explicit NetworkServer(int port, Logger &logger);
+        explicit NetworkServer(int port, Logger &logger, std::string path);
         ~NetworkServer();
         void run();
 
@@ -52,6 +52,7 @@ class NetworkServer {
         pollfd _fds[MAX_CLIENTS + 1];
         std::unordered_map<int, Client> _clients;
         int _nbSockets;
+        std::string _path;
 };
 
 #endif //NETWORKSERVER_HPP

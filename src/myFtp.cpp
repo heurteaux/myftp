@@ -26,7 +26,7 @@ namespace ftp
 
     myFtp::myFtp(const int argc, const char **argv) : _port(getPort(argc, argv)),
                                                       _logger(Logger(Logger::LogLevel::TRACE)),
-                                                      _server(NetworkServer(_port, _logger))
+                                                      _server(NetworkServer(_port, _logger, _path))
     {}
 
     void myFtp::run()

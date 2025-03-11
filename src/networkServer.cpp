@@ -7,6 +7,8 @@
 
 #include "networkServer.hpp"
 
+#include <utility>
+
 int NetworkServer::createSocket()
 {
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -58,10 +60,10 @@ void NetworkServer::createServerSocketPollEntry()
     _nbSockets = 1;
 }
 
-NetworkServer::NetworkServer(const int port, Logger &logger) : _logger(logger), _serverPort(port),
+NetworkServer::NetworkServer(const int port, Logger &logger, std::string path) : _logger(logger), _serverPort(port),
                                                                _serverSocket(createSocket()),
                                                                _serverAddress(createServerAddress()),
-                                                               _fds({}), _clients(std::unordered_map<int, Client>()), _nbSockets(0)
+                                                               _fds({}), _clients(std::unordered_map<int, Client>()), _nbSockets(0), _path(std::move(path))
 {
     bindSocket();
     startListening();
@@ -139,7 +141,7 @@ void NetworkServer::run()
                     _fds[_nbSockets].fd = clientSocket;
                     _fds[_nbSockets].events = POLLIN;
                     _nbSockets++;
-                    _clients.emplace(clientSocket, Client(_logger, clientSocket));
+                    _clients.emplace(clientSocket, Client(_logger, clientSocket, _path));
                     _logger.log(Logger::LogLevel::INFO,
                                 std::format("client from {} connected on remote port {}",
                                             inet_ntoa(clientAddress.sin_addr), ntohs(clientAddress.sin_port)));
