@@ -65,8 +65,30 @@ set(LIB_SOURCES
         src/logger.hpp
         src/networkServer.cpp
         src/networkServer.hpp
-        src/client.cpp
-        src/client.hpp
+        src/commandRegistry.cpp
+        src/commandRegistry.hpp
+        src/commandHandlers/AbstractClasses/ICommandHandler.hpp
+        src/commandHandlers/userHandler.cpp
+        src/commandHandlers/userHandler.hpp
+        src/sessionState.hpp
+        src/commandHandlers/AbstractClasses/ACommandHandler.cpp
+        src/commandHandlers/AbstractClasses/ACommandHandler.hpp
+        src/protocol/protocolResponse.cpp
+        src/protocol/protocolResponse.hpp
+        src/commandHandlers/passHandler.cpp
+        src/commandHandlers/passHandler.hpp
+        src/commandHandlers/cwdHandler.cpp
+        src/commandHandlers/cwdHandler.hpp
+        src/commandHandlers/cdupHandler.cpp
+        src/commandHandlers/cdupHandler.hpp
+        src/commandHandlers/quitHandler.cpp
+        src/commandHandlers/quitHandler.hpp
+        src/commandHandlers/deleHandler.cpp
+        src/commandHandlers/deleHandler.hpp
+        src/commandHandlers/pwdHandler.cpp
+        src/commandHandlers/pwdHandler.hpp
+        src/commandHandlers/noopHandler.cpp
+        src/commandHandlers/noopHandler.hpp
 )
 
 list(REMOVE_ITEM LIB_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")

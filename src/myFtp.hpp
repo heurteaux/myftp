@@ -12,6 +12,7 @@
 #include <iostream>
 #include "networkServer.hpp"
 #include "logger.hpp"
+#include "protocolResponse.hpp"
 
 #define HELP_FLAG_SHORT "-h"
 #define HELP_FLAG_LONG "--help"
@@ -26,6 +27,12 @@ namespace ftp
 
             void run();
 
+            static void sendResponse(FtpResponse response, int socketFd) ;
+
+            static void sendCustomResponse(const std::string &response, int socketFd) ;
+
+            static std::vector<std::string> tokenize(const std::string &input);
+
             ~myFtp() = default;
 
             class invalidArgument final : public std::exception {
@@ -37,6 +44,11 @@ namespace ftp
             };
         private:
             int getPort(int argc, const char **argv);
+
+            static std::string getRootDirectory(std::string &path);
+
+            static void fillCommandRegistry();
+            static void requestHandler(const std::string &request, std::shared_ptr<SessionState> &session);
 
             int _port;
             std::string _path;

@@ -6,8 +6,8 @@
 */
 
 #include "networkServer.hpp"
-
 #include <utility>
+#include "sessionState.hpp"
 
 int NetworkServer::createSocket()
 {
@@ -60,10 +60,12 @@ void NetworkServer::createServerSocketPollEntry()
     _nbSockets = 1;
 }
 
-NetworkServer::NetworkServer(const int port, Logger &logger, std::string path) : _logger(logger), _serverPort(port),
-                                                               _serverSocket(createSocket()),
-                                                               _serverAddress(createServerAddress()),
-                                                               _fds({}), _clients(std::unordered_map<int, Client>()), _nbSockets(0), _path(std::move(path))
+NetworkServer::NetworkServer(const int port, Logger &logger, std::string path,
+                             const RequestHandler handler) : _logger(logger), _serverPort(port),
+                                                       _serverSocket(createSocket()),
+                                                       _serverAddress(createServerAddress()),
+                                                       _fds({}), _sessions(std::unordered_map<int, std::shared_ptr<SessionState>>()),
+                                                       _nbSockets(0), _path(std::move(path)), _handler(handler)
 {
     bindSocket();
     startListening();
@@ -141,7 +143,7 @@ void NetworkServer::run()
                     _fds[_nbSockets].fd = clientSocket;
                     _fds[_nbSockets].events = POLLIN;
                     _nbSockets++;
-                    _clients.emplace(clientSocket, Client(_logger, clientSocket, _path));
+                    _sessions.emplace(clientSocket, make_shared<SessionState>(clientSocket, _path));
                     _logger.log(Logger::LogLevel::INFO,
                                 std::format("client from {} connected on remote port {}",
                                             inet_ntoa(clientAddress.sin_addr), ntohs(clientAddress.sin_port)));
@@ -163,14 +165,15 @@ void NetworkServer::run()
                                 std::format("client from {} disconnected", getClientIp(_fds[i].fd)));
                     // Client disconnected or error
                     close(_fds[i].fd);
-                    _clients.erase(_fds[i].fd);
+                    _sessions.erase(_fds[i].fd);
                     // Remove from poll array by shifting every item after removed one to the left
                     memmove(&_fds[i], &_fds[i + 1],
                             (_nbSockets - i - 1) * sizeof(pollfd));
                     _nbSockets--;
                     i--;
                 } else {
-                    _clients.at(_fds[i].fd).handleRequest(buffer);
+                    std::string request(buffer, bytesRead);
+                    _handler(request, _sessions.at(_fds[i].fd));
                     memset(buffer, 0, bytesRead);
                 }
             }
