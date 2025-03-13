@@ -147,6 +147,8 @@ void NetworkServer::run()
                     _logger.log(Logger::LogLevel::INFO,
                                 std::format("client from {} connected on remote port {}",
                                             inet_ntoa(clientAddress.sin_addr), ntohs(clientAddress.sin_port)));
+                    char msg[] = "220 Service ready for new user.\r\n";
+                    write(clientSocket, msg, sizeof(msg));
                 } else {
                     _logger.log(Logger::LogLevel::ERROR, "cannot accept incoming client connection");
                 }
