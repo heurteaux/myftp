@@ -148,7 +148,7 @@ void NetworkServer::run()
                                 std::format("client from {} connected on remote port {}",
                                             inet_ntoa(clientAddress.sin_addr), ntohs(clientAddress.sin_port)));
                     char msg[] = "220 Service ready for new user.\r\n";
-                    write(clientSocket, msg, sizeof(msg));
+                    write(clientSocket, msg, sizeof(msg) - 1);
                 } else {
                     _logger.log(Logger::LogLevel::ERROR, "cannot accept incoming client connection");
                 }
@@ -160,7 +160,7 @@ void NetworkServer::run()
             // i = 1 to skip server's socket
             if (_fds[i].revents & POLLIN) {
                 char buffer[4096];
-                int bytesRead = read(_fds[i].fd, buffer, sizeof(buffer));
+                int bytesRead = read(_fds[i].fd, buffer, sizeof(buffer) - 1);
 
                 if (bytesRead <= 0) {
                     _logger.log(Logger::LogLevel::INFO,
@@ -168,7 +168,6 @@ void NetworkServer::run()
                     // Client disconnected or error
                     close(_fds[i].fd);
                     _sessions.erase(_fds[i].fd);
-                    std::cout << _sessions.size() << std::endl;
                     // Remove from poll array by shifting every item after removed one to the left
                     memmove(&_fds[i], &_fds[i + 1],
                             (_nbSockets - i - 1) * sizeof(pollfd));
