@@ -93,14 +93,14 @@ namespace ftp
         }
 
         const std::string res = protocolResponses.at(static_cast<int>(response)).getResponse();
-        if (write(socketFd, res.data(), res.size()) == -1) {
+        if (write(socketFd, res.c_str(), res.size()) == -1) {
             throw std::runtime_error("an error occurred when writing to network socket");
         }
     }
 
     void myFtp::sendCustomResponse(const std::string &response, const int socketFd)
     {
-        if (write(socketFd, response.data(), response.size()) == -1) {
+        if (write(socketFd, response.c_str(), response.size()) == -1) {
             throw std::runtime_error("an error occurred when writing to network socket");
         }
     }
