@@ -122,4 +122,7 @@ if(GTEST_AVAILABLE)
     gtest_discover_tests(unit_tests)
 endif()
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+set_target_properties(${PROJECT_NAME_VAR}
+        PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
