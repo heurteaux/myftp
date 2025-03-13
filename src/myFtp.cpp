@@ -16,6 +16,8 @@
 #include "pwdHandler.hpp"
 #include "noopHandler.hpp"
 #include <filesystem>
+#include "pasvHandler.hpp"
+#include "portHandler.hpp"
 
 namespace ftp
 {
@@ -78,6 +80,8 @@ namespace ftp
         registry.registerCommand("PWD", std::make_shared<pwdHandler>());
         registry.registerCommand("NOOP", std::make_shared<noopHandler>());
         registry.registerCommand("CDUP", std::make_shared<cdupHandler>());
+        registry.registerCommand("PASV", std::make_shared<pasvHandler>());
+        registry.registerCommand("PORT", std::make_shared<portHandler>());
     }
 
     void myFtp::run()
@@ -138,7 +142,6 @@ namespace ftp
         const std::vector args(chunkedRequest.begin() + 1, chunkedRequest.end());
         std::string command = chunkedRequest[0];
 
-        // make command case-insensitive
         for (auto &c: command) {
             c = static_cast<char>(std::toupper(c));
         }

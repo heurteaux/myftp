@@ -89,6 +89,10 @@ set(LIB_SOURCES
         src/commandHandlers/pwdHandler.hpp
         src/commandHandlers/noopHandler.cpp
         src/commandHandlers/noopHandler.hpp
+        src/commandHandlers/pasvHandler.cpp
+        src/commandHandlers/pasvHandler.hpp
+        src/commandHandlers/portHandler.cpp
+        src/commandHandlers/portHandler.hpp
 )
 
 list(REMOVE_ITEM LIB_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
