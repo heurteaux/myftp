@@ -121,5 +121,3 @@ if(GTEST_AVAILABLE)
     include(GoogleTest)
     gtest_discover_tests(unit_tests)
 endif()
-
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
