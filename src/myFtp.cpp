@@ -116,13 +116,20 @@ namespace ftp
         return tokens;
     }
 
+    std::string trim(const std::string &str)
+    {
+        static const char* ws = " \t\n\r\f\v";
+        size_t start = str.find_first_not_of(ws);
+        if (start == std::string::npos)
+            return "";
+        size_t end = str.find_last_not_of(ws);
+        return str.substr(start, end - start + 1);
+    }
+
     void myFtp::requestHandler(const std::string &request, std::shared_ptr<SessionState> &session)
     {
-        std::string reqCpy(request);
-        std::erase(reqCpy, '\r');
-        std::erase(reqCpy, '\n');
-
-        std::vector<std::string> chunkedRequest = tokenize(reqCpy);
+        const std::string cleanedRequest = trim(request);
+        std::vector<std::string> chunkedRequest = tokenize(cleanedRequest);
 
         if (chunkedRequest.empty()) {
             sendResponse(FtpResponse::SYNTAX_ERROR_PARAMS, session->getSocketFd());

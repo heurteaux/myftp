@@ -23,7 +23,6 @@ void cwdHandler::handleRequest(const std::vector<std::string> &args, std::shared
     }
 
     const std::string &newDirectory = args[0];
-
     if (newDirectory.empty()) {
         sendResponse(FtpResponse::SYNTAX_ERROR_PARAMS, state);
         return;
@@ -43,8 +42,8 @@ void cwdHandler::handleRequest(const std::vector<std::string> &args, std::shared
     }
 
     std::error_code ec;
-    newCurrentDir = fs::weakly_canonical(newCurrentDir, ec);
-    fs::path canonicalPath = fs::canonical(targetPath, ec);
+    newCurrentDir = newCurrentDir.lexically_normal();
+    const fs::path canonicalPath = fs::canonical(targetPath, ec).lexically_normal();
     if (ec) {
         sendResponse(FtpResponse::FILE_UNAVAILABLE_NOT_FOUND, state);
         return;
@@ -63,7 +62,10 @@ void cwdHandler::handleRequest(const std::vector<std::string> &args, std::shared
         sendResponse(FtpResponse::FILE_UNAVAILABLE_NOT_FOUND, state);
         return;
     }
-
-    state->setCurrentDirectory(newCurrentDir.string());
+    std::string dirPath = newCurrentDir.string();
+    if (!dirPath.empty() && dirPath.back() != '/') {
+        dirPath += '/';
+    }
+    state->setCurrentDirectory(dirPath);
     sendResponse(FtpResponse::FILE_ACTION_COMPLETED, state);
 }

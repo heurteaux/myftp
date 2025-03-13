@@ -166,6 +166,7 @@ void NetworkServer::run()
                     // Client disconnected or error
                     close(_fds[i].fd);
                     _sessions.erase(_fds[i].fd);
+                    std::cout << _sessions.size() << std::endl;
                     // Remove from poll array by shifting every item after removed one to the left
                     memmove(&_fds[i], &_fds[i + 1],
                             (_nbSockets - i - 1) * sizeof(pollfd));
