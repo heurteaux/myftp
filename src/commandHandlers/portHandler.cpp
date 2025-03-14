@@ -48,7 +48,7 @@ void portHandler::handleRequest(const std::vector<std::string> &args, std::share
         return;
     }
     if (args.size() != 1) {
-        sendResponse(FtpResponse::SYNTAX_ERROR_PARAMS, state);
+        sendResponse(FtpResponse::SYNTAX_ERROR, state);
         return;
     }
 
@@ -56,14 +56,33 @@ void portHandler::handleRequest(const std::vector<std::string> &args, std::share
     int clientPort;
 
     if (!parsePortArgument(args[0], clientIp, clientPort)) {
-        sendResponse(FtpResponse::SYNTAX_ERROR_PARAMS, state);
+        sendResponse(FtpResponse::SYNTAX_ERROR, state);
         return;
     }
     if (state->getDataSocket() != -1) {
         close(state->getDataSocket());
     }
-    state->setDataIpAddress(clientIp);
-    state->setDataPort(clientPort);
+
+    const int sock = socket(AF_INET, SOCK_STREAM, 0);
+    if (sock < 0) {
+        sendResponse(FtpResponse::CANT_OPEN_DATA_CONN, state);
+        return;
+    }
+
+    sockaddr_in server_addr;
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(clientPort);
+    if (inet_pton(AF_INET, clientIp.c_str(), &server_addr.sin_addr) <= 0) {
+        sendResponse(FtpResponse::CANT_OPEN_DATA_CONN, state);
+        close(sock);
+        return;
+    }
+    if (connect(sock, (sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
+        sendResponse(FtpResponse::CANT_OPEN_DATA_CONN, state);
+        close(sock);
+        return;
+    }
+    state->setDataSocket(sock);
     state->setTransferMode(SessionState::TransferMode::ACTIVE);
     sendResponse(FtpResponse::COMMAND_OK, state);
 }
