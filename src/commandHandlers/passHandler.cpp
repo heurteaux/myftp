@@ -23,10 +23,11 @@ void passHandler::handleRequest(const std::vector<std::string> &args, std::share
     // no true check for the password is performed
     // as there is no user handling, we expect an empty password
     // for the anonymous user
-    if (aSize == 0) {
+    if (aSize == 0 && state->getUsername() == GUEST_USER) {
         state->setAuthStatus(true);
         sendResponse(FtpResponse::USER_LOGGED_IN, state);
     } else {
+        state->setUsername("");
         sendResponse(FtpResponse::NOT_LOGGED_IN, state);
     }
 }

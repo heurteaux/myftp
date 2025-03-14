@@ -10,8 +10,6 @@
 
 #include "ACommandHandler.hpp"
 
-#define GUEST_USER "Anonymous"
-
 class userHandler: public ACommandHandler {
     public:
         explicit userHandler() = default;

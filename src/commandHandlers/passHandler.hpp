@@ -10,6 +10,8 @@
 
 #include "ACommandHandler.hpp"
 
+#define GUEST_USER "Anonymous"
+
 class passHandler: public ACommandHandler {
     public:
         explicit passHandler() = default;

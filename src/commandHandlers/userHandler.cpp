@@ -18,11 +18,7 @@ void userHandler::handleRequest(const std::vector<std::string> &args, std::share
 
     const std::string &username = args[0];
 
-    if (username == GUEST_USER) {
-        state->setUsername(username);
-        state->setAuthStatus(true);
-        sendResponse(FtpResponse::USERNAME_OK_NEED_PASSWORD, state);
-    } else {
-        sendResponse(FtpResponse::NOT_LOGGED_IN, state);
-    }
+    state->setUsername(username);
+    state->setAuthStatus(true);
+    sendResponse(FtpResponse::USERNAME_OK_NEED_PASSWORD, state);
 }
