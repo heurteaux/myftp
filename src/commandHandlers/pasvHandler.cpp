@@ -32,26 +32,7 @@ int pasvHandler::createPassiveSocket(std::string &ipAddress, int &port)
         return -1;
     }
 
-    ifaddrs *ifap, *ifa;
-    sockaddr_in *sa;
-    char host[NI_MAXHOST];
-
-    getifaddrs(&ifap);
-    for (ifa = ifap; ifa; ifa = ifa->ifa_next) {
-        if (ifa->ifa_addr && ifa->ifa_addr->sa_family == AF_INET) {
-            sa = reinterpret_cast<sockaddr_in *>(ifa->ifa_addr);
-            if ((ifa->ifa_flags & IFF_LOOPBACK) == 0) {
-                inet_ntop(AF_INET, &(sa->sin_addr), host, NI_MAXHOST);
-                ipAddress = host;
-                break;
-            }
-        }
-    }
-    freeifaddrs(ifap);
-
-    if (ipAddress.empty()) {
-        ipAddress = "127.0.0.1";
-    }
+    ipAddress = "127.0.0.1";
 
     sockaddr_in serverAddr = {};
     serverAddr.sin_family = AF_INET;

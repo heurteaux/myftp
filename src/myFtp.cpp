@@ -18,6 +18,7 @@
 #include <filesystem>
 #include "pasvHandler.hpp"
 #include "portHandler.hpp"
+#include "listHandler.hpp"
 
 namespace ftp
 {
@@ -82,6 +83,7 @@ namespace ftp
         registry.registerCommand("CDUP", std::make_shared<cdupHandler>());
         registry.registerCommand("PASV", std::make_shared<pasvHandler>());
         registry.registerCommand("PORT", std::make_shared<portHandler>());
+        registry.registerCommand("LIST", std::make_shared<listHandler>());
     }
 
     void myFtp::run()
@@ -136,7 +138,7 @@ namespace ftp
         std::vector<std::string> chunkedRequest = tokenize(cleanedRequest);
 
         if (chunkedRequest.empty()) {
-            sendResponse(FtpResponse::SYNTAX_ERROR_PARAMS, session->getSocketFd());
+            sendResponse(FtpResponse::SYNTAX_ERROR, session->getSocketFd());
             return;
         }
         const std::vector args(chunkedRequest.begin() + 1, chunkedRequest.end());
@@ -149,7 +151,7 @@ namespace ftp
         if (CommandRegistry::getInstance().contains(command)) {
             CommandRegistry::getInstance().getCommandHandler(command)->handleRequest(args, session);
         } else {
-            sendResponse(FtpResponse::CMD_NOT_IMPLEMENTED, session->getSocketFd());
+            sendResponse(FtpResponse::SYNTAX_ERROR, session->getSocketFd());
         }
     }
 }
