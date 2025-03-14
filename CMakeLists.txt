@@ -97,6 +97,10 @@ set(LIB_SOURCES
         src/commandHandlers/listHandler.hpp
         src/commandHandlers/helpHandler.cpp
         src/commandHandlers/helpHandler.hpp
+        src/commandHandlers/retrHandler.cpp
+        src/commandHandlers/retrHandler.hpp
+        src/commandHandlers/storHandler.cpp
+        src/commandHandlers/storHandler.hpp
 )
 
 list(REMOVE_ITEM LIB_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")

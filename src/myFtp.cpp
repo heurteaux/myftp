@@ -19,6 +19,8 @@
 #include "pasvHandler.hpp"
 #include "portHandler.hpp"
 #include "listHandler.hpp"
+#include "retrHandler.hpp"
+#include "storHandler.hpp"
 
 namespace ftp
 {
@@ -84,6 +86,8 @@ namespace ftp
         registry.registerCommand("PASV", std::make_shared<pasvHandler>());
         registry.registerCommand("PORT", std::make_shared<portHandler>());
         registry.registerCommand("LIST", std::make_shared<listHandler>());
+        registry.registerCommand("RETR", std::make_shared<retrHandler>());
+        registry.registerCommand("STOR", std::make_shared<storHandler>());
     }
 
     void myFtp::run()
