@@ -118,12 +118,12 @@ void retrHandler::handleRequest(const std::vector<std::string> &args, std::share
     }
 
     if (!fs::exists(filePath) || !fs::is_regular_file(filePath)) {
-        sendResponse(FtpResponse::FILE_UNAVAILABLE, state);
+        sendResponse(FtpResponse::FILE_UNAVAILABLE_NOT_FOUND, state);
         return;
     }
 
     if (access(filePath.c_str(), R_OK) != 0) {
-        sendResponse(FtpResponse::FILE_UNAVAILABLE, state);
+        sendResponse(FtpResponse::FILE_UNAVAILABLE_NOT_FOUND, state);
         return;
     }
 

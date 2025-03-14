@@ -19,7 +19,10 @@ void pwdHandler::handleRequest(const std::vector<std::string> &args, std::shared
         return;
     }
 
-    const std::string currentPath = state->getCurrentDirectory();
+    std::string currentPath = state->getCurrentDirectory();
+    if (!currentPath.empty() && currentPath.back() != '/') {
+        currentPath += '/';
+    }
     const std::string pathResponse = "\"" + currentPath + "\"";
     const std::string response = "257 " + pathResponse + " is current directory.\r\n";
     sendCustomResponse(response, state);
