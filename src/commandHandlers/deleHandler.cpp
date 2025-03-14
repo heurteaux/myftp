@@ -37,31 +37,31 @@ void deleHandler::handleRequest(const std::vector<std::string> &args, std::share
     std::error_code ec;
     fs::path canonicalPath = fs::canonical(targetPath, ec);
     if (ec) {
-        sendResponse(FtpResponse::FILE_UNAVAILABLE, state);
+        sendResponse(FtpResponse::FILE_UNAVAILABLE_NOT_FOUND, state);
         return;
     }
 
     auto relPath = fs::relative(canonicalPath, rootDirectory, ec);
     if (ec || relPath.string().starts_with("..")) {
-        sendResponse(FtpResponse::FILE_UNAVAILABLE, state);
+        sendResponse(FtpResponse::FILE_UNAVAILABLE_NOT_FOUND, state);
         return;
     }
     if (!fs::exists(canonicalPath, ec) || ec) {
-        sendResponse(FtpResponse::FILE_UNAVAILABLE, state);
+        sendResponse(FtpResponse::FILE_UNAVAILABLE_NOT_FOUND, state);
         return;
     }
     if (access(canonicalPath.parent_path().c_str(), W_OK) != 0) {
-        sendResponse(FtpResponse::FILE_UNAVAILABLE, state);
+        sendResponse(FtpResponse::FILE_UNAVAILABLE_NOT_FOUND, state);
         return;
     }
     if (fs::is_directory(canonicalPath, ec) && !ec) {
         if (!fs::remove_all(canonicalPath, ec) || ec) {
-            sendResponse(FtpResponse::FILE_UNAVAILABLE, state);
+            sendResponse(FtpResponse::FILE_UNAVAILABLE_NOT_FOUND, state);
             return;
         }
     } else {
         if (!fs::remove(canonicalPath, ec) || ec) {
-            sendResponse(FtpResponse::FILE_UNAVAILABLE, state);
+            sendResponse(FtpResponse::FILE_UNAVAILABLE_NOT_FOUND, state);
             return;
         }
     }
