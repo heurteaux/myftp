@@ -16,6 +16,8 @@
 #include "pwdHandler.hpp"
 #include "noopHandler.hpp"
 #include <filesystem>
+
+#include "helpHandler.hpp"
 #include "pasvHandler.hpp"
 #include "portHandler.hpp"
 #include "listHandler.hpp"
@@ -88,6 +90,7 @@ namespace ftp
         registry.registerCommand("LIST", std::make_shared<listHandler>());
         registry.registerCommand("RETR", std::make_shared<retrHandler>());
         registry.registerCommand("STOR", std::make_shared<storHandler>());
+        registry.registerCommand("HELP", std::make_shared<helpHandler>());
     }
 
     void myFtp::run()
